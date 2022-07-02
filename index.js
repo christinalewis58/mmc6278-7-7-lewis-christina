@@ -51,15 +51,77 @@ var questionsArr = [
         ]
       },
   ]
+  
 
-var startQuizBtn = document.getElementById('start-quiz')
-console.log('start-quiz')
 
-//function runQuiz() {
-    //for(let i = 0; i < questionsArr.length; i++)
-//}
 
-  //When the page loads, if the user has never played the game before, the game should display a "start quiz" button. The button MUST have an id attribute of "start-quiz" (figure 1). The included automated tests require this id and will fail without it.
+//Start quiz button
+
+var quizDiv = document.getElementById('quiz')
+
+var startQuizBtn = document.createElement('button')
+startQuizBtn.id = 'start-quiz'
+quizDiv.appendChild(startQuizBtn)
+startQuizBtn.textContent = 'start quiz'
+
+//Display the question inside the quiz div
+
+var index = 0 
+var correct = 0
+function displayQuestion(){
+    quizDiv.innerHTML = ""
+var paragraph = document.createElement('p')
+paragraph.textContent = questionsArr[index].question
+quizDiv.appendChild(paragraph)
+displayOptions()
+}
+function startQuiz() {
+displayQuestion() 
+
+  
+}
+startQuizBtn.onclick = startQuiz
+
+//Display the questions as buttons inside a wrapper div, inside the quiz div
+
+function displayOptions() {
+    var wrapperDiv = document.createElement('div')
+    for(let i = 0; i < questionsArr[index].options.length; i++){
+        var option = questionsArr[index].options[i]
+    var btn = document.createElement('button')
+    btn.onclick = handleClick
+    btn.innerHTML = option
+    wrapperDiv.appendChild(btn)
+    }
+
+    quizDiv.appendChild(wrapperDiv)
+}
+
+//when user selects an option, compare the option to the correct answer and keep track of score.
+
+function handleClick(event){
+    if(event.target.textContent === questionsArr[index].answer) {
+        correct++
+    } 
+    index++
+   
+//Display user's percent correct at end of game
+    if(index === 5) {
+        quizDiv.innerHTML = (correct/5 *100) + "%"
+        return
+    }
+    displayQuestion()
+}
+
+var counterP = document.createElement('p')
+counterP.textContent = 30
+counterP.id = 'timer'
+quizDiv.appendChild(counterP)
+
+function startTimer() {
+    
+}
+
 
   //If the user has taken the quiz before, the app should display the previous score.
 
