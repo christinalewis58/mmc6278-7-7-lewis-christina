@@ -183,7 +183,10 @@ function runTests() {
       expect(getQuizHTML().includes(qArr[0].question)).to.be.false
       startQuiz()
       expect(getQuizHTML().includes(qArr[0].question)).to.be.true
+      console.log(getQuizHTML())
+      
       qArr[0]
+      
         .options
         .forEach(option =>
           expect(getQuizHTML().includes(option)).to.be.true)

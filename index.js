@@ -53,17 +53,29 @@ var questionsArr = [
   ]
   
 
-
+var intervalId 
 
 //Start quiz button
 
 var quizDiv = document.getElementById('quiz')
+var previousScore = localStorage.getItem('previous-score')
+if (previousScore) {
+    var previous = document.createElement('p')
+    previous.textContent = previousScore*100 + '%'
+    quizDiv.appendChild(previous)
 
+    
+}
+
+function createQuizBtn() {
 var startQuizBtn = document.createElement('button')
 startQuizBtn.id = 'start-quiz'
 quizDiv.appendChild(startQuizBtn)
 startQuizBtn.textContent = 'start quiz'
+startQuizBtn.onclick = startQuiz
+}
 
+createQuizBtn()
 //Display the question inside the quiz div
 
 var index = 0 
@@ -76,11 +88,21 @@ quizDiv.appendChild(paragraph)
 displayOptions()
 }
 function startQuiz() {
+    index = 0 
+    correct = 0
 displayQuestion() 
-
-  
+ 
 }
-startQuizBtn.onclick = startQuiz
+function createTimer (){
+    var counterP = document.createElement('p')
+counterP.textContent = 30
+counterP.id = 'timer'
+quizDiv.appendChild(counterP)
+startTimer()
+}
+
+
+
 
 //Display the questions as buttons inside a wrapper div, inside the quiz div
 
@@ -95,6 +117,8 @@ function displayOptions() {
     }
 
     quizDiv.appendChild(wrapperDiv)
+    createTimer()
+    
 }
 
 //when user selects an option, compare the option to the correct answer and keep track of score.
@@ -103,25 +127,51 @@ function handleClick(event){
     if(event.target.textContent === questionsArr[index].answer) {
         correct++
     } 
-    index++
+    endTimer()
+   /* index++
    
 //Display user's percent correct at end of game
     if(index === 5) {
         quizDiv.innerHTML = (correct/5 *100) + "%"
         return
     }
-    displayQuestion()
+    displayQuestion()*/
 }
 
-var counterP = document.createElement('p')
-counterP.textContent = 30
-counterP.id = 'timer'
-quizDiv.appendChild(counterP)
+//create a paragraph element within the quizDiv to hold the 'counter'
+
+function gradeQuiz() { 
+    clearInterval(intervalId)
+    var grade = correct/5
+    localStorage.setItem('previous-score', grade)
+    quizDiv.innerHTML = (correct/5 *100) + "%"
+    createQuizBtn()
+}
+//create the start timer function
 
 function startTimer() {
-    
+    console.log('startTimer')
+    intervalId = setInterval(function(){
+        var secondP = document.getElementById('timer');
+        //console.log('secondP', secondP)
+        var seconds = Number(secondP.textContent) -1
+        secondP.textContent = seconds
+        if(seconds === 0) {
+            endTimer()
+        } else {
+        }
+    }, 1000)
 }
 
+//create the end timer function
+
+function endTimer() {
+    clearInterval(intervalId)
+    index++
+    if(index === questionsArr.length){
+        gradeQuiz()
+    } else{displayQuestion()}
+}
 
   //If the user has taken the quiz before, the app should display the previous score.
 
