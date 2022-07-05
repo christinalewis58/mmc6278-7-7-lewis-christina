@@ -144,7 +144,7 @@ function gradeQuiz() {
     clearInterval(intervalId)
     var grade = correct/5
     localStorage.setItem('previous-score', grade)
-    quizDiv.innerHTML = (correct/5 *100) + "%"
+    quizDiv.innerHTML = (correct/questionsArr.length *100) + "%"
     createQuizBtn()
 }
 //create the start timer function
